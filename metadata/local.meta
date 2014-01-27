@@ -9,3 +9,7 @@ modtime = 1390545759.855639000
 [inputs/script%3A%2F%2F%24SPLUNK_HOME%2Fetc%2Fapps%2Fpwnexpress%2Fbin%2Fgen_bluetooth_events.py]
 version = 6.0.1
 modtime = 1390546712.768791000
+
+[views/rsa_dashboard_roaming]
+version = 6.0.1
+modtime = 1390811470.971356000

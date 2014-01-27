@@ -61,4 +61,4 @@ def make_wirelesslog():
 
 while True:
     print make_wirelesslog()
-    time.sleep (1/EPS)
+    time.sleep(1/EPS)
