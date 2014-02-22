@@ -1,37 +1,42 @@
 <form>
   <label>Roaming Devices</label>
-  <searchTemplate>index=pwnexpress| table _time detection_time, probe, pwn_host, device_model, device_name, device_type, device_mac, encryption log_type, mac_addr, pwn_host, station_id</searchTemplate>
+  <description>Wireless &amp; Bluetooth devices detected by Pwnie Express Pwn Plug R2 sensor</description>
+  <searchTemplate>index=pwnexpress| table _time, source, host, pwn_device_type, pwn_device_mac, pwn_client_AP, pwn_SSID, pwn_encryption, pwn_probes, pwn_bttype, pwn_btclass, pwn_btname</searchTemplate>
   <fieldset autoRun="true">
     <input type="time" searchWhenChanged="true">
       <default>
-        <earliestTime>rt-5m</earliestTime>
+        <earliestTime>rt-30m</earliestTime>
         <latestTime>rt</latestTime>
       </default>
     </input>
   </fieldset>
   <row>
     <single>
-      <title>Pwnie Events</title>
+      <title>Total devices</title>
       <searchPostProcess>stats count</searchPostProcess>
       <option name="charting.chart">column</option>
+      <option name="linkView">search</option>
     </single>
     <single>
       <title>Unique Devices</title>
-      <searchPostProcess>stats dc(device_name)</searchPostProcess>
+      <searchPostProcess>stats dc(pwn_device_mac)</searchPostProcess>
+      <option name="linkView">search</option>
     </single>
     <single>
-      <title>Last Wifi Probe Detected</title>
-      <searchPostProcess>where device_mac NOT NULL| table device_mac | head 1</searchPostProcess>
+      <title>Last Wifi Probe</title>
+      <searchPostProcess>where pwn_probes NOT NULL| table pwn_probes | head 1</searchPostProcess>
+      <option name="linkView">search</option>
     </single>
     <single>
-      <title>Last Bluetooth Device Detected</title>
-      <searchPostProcess>where device_name NOT NULL| table device_name | head 1</searchPostProcess>
+      <title>Last Bluetooth Device</title>
+      <searchPostProcess>where pwn_btname NOT NULL| table pwn_btname | head 1</searchPostProcess>
+      <option name="linkView">search</option>
     </single>
   </row>
   <row>
     <chart>
       <title>Device Types</title>
-      <searchPostProcess>where device_type NOT NULL | timechart count by device_type</searchPostProcess>
+      <searchPostProcess>where pwn_device_type NOT NULL | timechart count by pwn_device_type</searchPostProcess>
       <option name="charting.axisTitleX.visibility">visible</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
@@ -48,7 +53,7 @@
     </chart>
     <table>
       <title>PWN Host and Device Type</title>
-      <searchPostProcess>where device_type NOT NULL |stats sparkline count(device_type) AS 'Device_Type' by pwn_host device_type | sort -'Device_Type' | head 7</searchPostProcess>
+      <searchPostProcess>where pwn_device_type NOT NULL |stats sparkline count(pwn_device_type) AS 'pwn_device_type' by host pwn_device_type | sort -'pwn_device_type' | head 7</searchPostProcess>
       <option name="wrap">true</option>
       <option name="rowNumbers">false</option>
       <option name="dataOverlayMode">none</option>
@@ -59,16 +64,19 @@
   <row>
     <table>
       <title>Live Stream</title>
-      <searchPostProcess>search log_type=bluelog| table _time pwn_host, device_model, device_name, device_type,mac_addr</searchPostProcess>
+      <searchPostProcess>table _time pwn_device_type, pwn_device_mac, pwn_SSID, pwn_encryption, pwn_probes, pwn_bttype, pwn_btname</searchPostProcess>
       <option name="count">10</option>
       <option name="list.drilldown">full</option>
       <option name="list.wrap">1</option>
       <option name="maxLines">5</option>
       <option name="raw.drilldown">full</option>
-      <option name="rowNumbers">0</option>
+      <option name="rowNumbers">false</option>
       <option name="table.drilldown">1</option>
       <option name="table.wrap">1</option>
       <option name="type">list</option>
+      <option name="wrap">true</option>
+      <option name="dataOverlayMode">none</option>
+      <option name="drilldown">row</option>
     </table>
   </row>
 </form>
